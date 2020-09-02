@@ -1,0 +1,20 @@
+Nginx Basic Auth
+----------------
+
+If you would like to enable basic auth, follow these steps (requires a local
+machine with `htpasswd` installed):
+
+1. Open a terminal
+2. Change directory to __PROJECT_DIRECTORY__/nginx-auth
+3. Run `htpasswd -c .htpasswd user-name`
+  - user-name is the username you would like to use for basic auth
+  - if you have already used this command, omit the -c to add users to an
+    existing .htpasswd file
+4. Enter the desired password twice
+5. Run the generator again: `ruby __GENERATOR_FILE__ __PROJECT_DIRECTORY__/generator-settings.yml`
+6. Copy the contents of __PROJECT_DIRECTORY__ to __SERVER_DIRECTORY__ on the
+   server again
+7. SSH into the server, and change to the __SERVER_DIRECTORY__ directory
+8. Run `docker-compose up --force-recreate -d webserver` (this copies the new auth
+   config to the docker container, and sets the correct file permissions)
+9. Access the website to verify that the basic auth is functioning as expected

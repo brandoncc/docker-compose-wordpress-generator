@@ -42,8 +42,18 @@ def replacements(config)
     '__CERTBOT_DOMAINS__' => -> { config[:domains].split(/,\s*/).map { |d| "-d #{d}" }.join(' ') },
     '__CERTBOT_EMAIL__' => -> { config[:certbot_email] },
     '__CERTBOT_MODE__' => -> { config[:certbot_mode] == 'live' ? '--force-renewal' : '--staging' },
+    '__GENERATOR_DIRECTORY__' => -> { __dir__ },
+    '__GENERATOR_FILE__' => -> { __FILE__ },
     '__MYSQL_IMAGE__' => -> { config[:mysql_image] },
     '__MYSQL_USER__' => -> { config[:mysql_username] },
+    '__NGINX_BASIC_AUTH__' => lambda {
+      if File.exist?(File.join(project_directory(config), 'nginx-auth', '.htpasswd'))
+        ["        auth_basic \“#{config[:application_name]}\”;",
+         "        auth_basic_user_file /etc/nginx/auth/.htpasswd;"].join("\n")
+      else
+        ''
+      end
+    },
     '__NGINX_DOMAINS__' => -> { config[:domains].split(/,\s*/).join(' ') },
     '__NGINX_IMAGE__' => -> { config[:nginx_image] },
     '__NGINX_SSL_CERTS__' => lambda {

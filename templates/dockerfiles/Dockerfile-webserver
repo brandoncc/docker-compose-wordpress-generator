@@ -1,0 +1,4 @@
+FROM __NGINX_IMAGE__
+
+# set proper permissions on basic auth passwords file
+RUN if [ -f /etc/nginx/auth/.htpasswd ]; then chown root:root /etc/nginx/auth/.htpasswd; chmod 644 /etc/nginx/auth/.htpasswd; fi

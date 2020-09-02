@@ -28,6 +28,12 @@ them, as there are specific installation steps.
 
 You can update the PHP values by adding a `.user.ini` file to your application's root directory (which will be mounted at /var/www/html/ within the docker container).
 
+## Basic Auth
+
+If you would like to use basic auth, follow the instructions in
+`applications/the-app/nginx-auth/instructions.txt` after you generate the
+application.
+
 ## Environment Variables
 
 After you run the generator, you will have a `.env` file located at
@@ -43,6 +49,22 @@ of the generator. That allows you to just change one setting at a time.
 
 In order to support this idempotency, the `.env` file is only written once. Each
 time you run the generator after that, the .env file will retain its contents.
+
+## Known Issues
+
+If you are deploying a new server (different IP) for a domain which already uses
+Let's Encrypt, running `docker-compose up -d` with Let's Encrypt in sandbox mode
+will not work. The entire system will fail to come online. There are two
+options:
+
+1. Change Let's Encrypt to "live" during the initial application generation.
+   ** This runs the risk of being rate limited by Let's Encrypt if you have to
+   keep starting over for any reason. **
+2. Comment out the certbot container in docker-compose after generating your
+   application. After you have confirmed that `docker-compose ps` looks good for
+   the first time, run the generator again, set Let's Encrypt to "live", and
+   upload the new configuration. Then you can `docker-compose up -d` again, and
+   Let's Encrypt should issue the certificate as usual.
 
 ## Contributions
 

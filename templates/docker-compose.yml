@@ -28,8 +28,8 @@ services:
     depends_on: 
       - db
     build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile-wordpress
+      context: ./dockerfiles
+      dockerfile: Dockerfile-wordpress
     container_name: wordpress
     restart: always
     env_file: .env
@@ -81,7 +81,9 @@ services:
   webserver:
     depends_on:
       - wordpress
-    image: __NGINX_IMAGE__
+    build:
+      context: ./dockerfiles
+      dockerfile: Dockerfile-webserver
     container_name: webserver
     restart: always
     ports:
@@ -90,6 +92,7 @@ services:
     volumes:
       - wordpress:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
+      - ./nginx-auth:/etc/nginx/auth
       - certbot-etc:/etc/letsencrypt
     networks:
       - app-network
