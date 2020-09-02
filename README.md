@@ -22,6 +22,10 @@ This will generate the configurations in `applications/the-app/`.
 
 Instructions for using the configurations are located at `applications/the-app/instructions.txt`. It is very important that you review them, as there are specific installation steps.
 
+## Customizing PHP
+
+You can update the PHP values by adding a `.user.ini` file to your application's root directory (which will be mounted at /var/www/html/ within the docker container).
+
 ## Contributions
 
 If you would like to contribute, please open a PR and provide a description of
