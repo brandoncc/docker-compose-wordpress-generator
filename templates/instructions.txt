@@ -1,0 +1,63 @@
+The configuration generated will run Wordpress on a single server.
+
+Tips for getting started:
+-------------------------
+- The order of the steps is important.
+  - You should do a sandbox SSL creation first to make sure that you don't
+    accidentally get rate limited by multiple attempts on the live Let's Encrypt
+    server.
+  - You can't configure nginx for SSL hosting until the live-mode SSL
+    installation has happened.
+  - The steps below make sure you do these things in the right order.
+
+- If `docker-compose ps` doesn't show what we expect, use
+  `docker-compose logs` to check for and debug errors.
+- If certbot doesn't show Exit 0, a common cause is the configured domain not
+  pointing at the host server. Use a tool such as https://dnschecker.org/ to
+  make sure the A records for all of the domains and subdomains you have
+  configured are resolving to the correct IP address.
+
+
+Here are the steps required to use it on a server:
+
+1.  Copy the contents of the directory containing this file to the host server.
+    The content should be placed in __SERVER_DIRECTORY__ on the server.
+2.  SSH into the host server, and change directory to __SERVER_DIRECTORY__.
+3.  Run `docker-compose up -d`.
+3.  Make sure docker-compose ps shows Up for webserver, wordpress, and db, as
+    well as Exit 0 for certbot. Exit 0 for certbot means the sandbox execution
+    was successful.
+4.  Run the generator again, but this time set the certbot mode to "live".
+5.  Copy the contents of this directory to the server again.
+6.  SSH into the host server, and change directory to __SERVER_DIRECTORY__.
+7.  Run `docker-compose up -d` again.
+8.  Run `docker-compose ps` again. Make sure the webserver, wordpress, and db
+    are "Up" again, and certbot should say Exit 0 again. This time, Exit 0 means
+    that certbot was able to install the Let's Encrypt certificate(s).
+9.  Run the generator again, but this time change the "Let's Encrypt is active"
+    setting to "yes". This will replace the basic nginx config with one that
+    supports SSL.
+10. SSH into the host server, and change directory to __SERVER_DIRECTORY__.
+11. Run `docker-compose exec webserver nginx -s reload`.
+12. You should be able to connect to each of the configured domains and
+    subdomains via https now. If not, check `docker-compose logs` for errors.
+
+
+We still need to configure autorenewal of the SSL certificates.
+
+1. On the server, run `crontab -e` to edit the cron jobs.
+2. Add this job:
+
+* * * * * __SERVER_DIRECTORY__ssl_renew_dry_run.sh >> /var/log/cron.log 2>&1
+
+3. After one minute, check /var/log/cron.log for errors.
+4. Change the cronjob to:
+
+0 12 * * * /root/wordpress/ssl_renew.sh >> /var/log/cron.log 2>&1
+
+This will attempt to update the SSL certificates automatically, every day.
+
+--------------------------------------------------------------------------------
+
+At this point, the server should be fully functional, and you can configure
+Wordpress via the web interface.
