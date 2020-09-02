@@ -20,15 +20,14 @@ Tips for getting started:
 
 Here are the steps required to use it on a server:
 
-1.  Copy the contents of the directory containing this file to the host server.
-    The content should be placed in __SERVER_DIRECTORY__ on the server.
+1.  Copy the contents of __PROJECT_DIRECTORY__ to __SERVER_DIRECTORY__ on the host server.
 2.  SSH into the host server, and change directory to __SERVER_DIRECTORY__.
 3.  Run `docker-compose up -d`.
 3.  Make sure docker-compose ps shows Up for webserver, wordpress, and db, as
     well as Exit 0 for certbot. Exit 0 for certbot means the sandbox execution
     was successful.
 4.  Run the generator again, but this time set the certbot mode to "live".
-5.  Copy the contents of this directory to the server again.
+5.  Copy the contents of __PROJECT_DIRECTORY__ to the server again.
 6.  SSH into the host server, and change directory to __SERVER_DIRECTORY__.
 7.  Run `docker-compose up -d` again.
 8.  Run `docker-compose ps` again. Make sure the webserver, wordpress, and db
@@ -37,9 +36,10 @@ Here are the steps required to use it on a server:
 9.  Run the generator again, but this time change the "Let's Encrypt is active"
     setting to "yes". This will replace the basic nginx config with one that
     supports SSL.
-10. SSH into the host server, and change directory to __SERVER_DIRECTORY__.
-11. Run `docker-compose exec webserver nginx -s reload`.
-12. You should be able to connect to each of the configured domains and
+10. Copy the contents of __PROJECT_DIRECTORY__ to the server again.
+11. SSH into the host server, and change directory to __SERVER_DIRECTORY__.
+12. Run `docker-compose exec webserver nginx -s reload`.
+13. You should be able to connect to each of the configured domains and
     subdomains via https now. If not, check `docker-compose logs` for errors.
 
 

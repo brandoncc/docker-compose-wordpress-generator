@@ -52,6 +52,7 @@ def replacements(config)
          "        ssl_certificate_key /etc/letsencrypt/live/#{domain}/privkey.pem;"]
       end.join("\n")
     },
+    '__PROJECT_DIRECTORY__' => -> { project_directory(config) },
     '__SERVER_DIRECTORY__' => -> { config[:server_directory] },
     '__WORDPRESS_IMAGE__' => -> { config[:wordpress_image] }
   )
