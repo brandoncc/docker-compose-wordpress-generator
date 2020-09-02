@@ -18,6 +18,10 @@ or, if you would like to update a configuration you created previously:
 ruby generate.rb applications/the-app/generator-settings.yaml
 ```
 
+This will generate the configurations in `applications/the-app/`.
+
+Instructions for using the configurations are located at `applications/the-app/instructions.txt`. It is very important that you review them, as there are specific installation steps.
+
 ## Contributions
 
 If you would like to contribute, please open a PR and provide a description of
