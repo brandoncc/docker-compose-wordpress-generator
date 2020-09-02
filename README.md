@@ -20,11 +20,29 @@ ruby generate.rb applications/the-app/generator-settings.yaml
 
 This will generate the configurations in `applications/the-app/`.
 
-Instructions for using the configurations are located at `applications/the-app/instructions.txt`. It is very important that you review them, as there are specific installation steps.
+Instructions for using the configurations are located at
+`applications/the-app/instructions.txt`. It is very important that you review
+them, as there are specific installation steps.
 
 ## Customizing PHP
 
 You can update the PHP values by adding a `.user.ini` file to your application's root directory (which will be mounted at /var/www/html/ within the docker container).
+
+## Environment Variables
+
+After you run the generator, you will have a `.env` file located at
+`applications/the-app/.env`. You can add more configuration values to this file,
+which will make the added key/value pairs available as environment variables in
+your docker containers.
+
+## Idempotency
+
+The generator is idempotent. Each time you run it, your settings are saved to a
+configuration file so that you can use them as a starting point on a future run
+of the generator. That allows you to just change one setting at a time.
+
+In order to support this idempotency, the `.env` file is only written once. Each
+time you run the generator after that, the .env file will retain its contents.
 
 ## Contributions
 
