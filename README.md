@@ -26,3 +26,10 @@ your changes in the comments.
 ## Issues
 
 If you find an issue, please open an issue.
+
+## Credit
+
+The configurations, and inspiration, for this tool came from
+https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-docker-compose
+
+Thank you for your awesome blog, Digital Ocean!
