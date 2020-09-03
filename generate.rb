@@ -39,7 +39,7 @@ BASE_REPLACEMENTS = {
 
 def replacements(config)
   BASE_REPLACEMENTS.merge(
-    '__CERTBOT_DOMAINS__' => -> { config[:domains].split(/,\s*/).map { |d| "-d #{d}" }.join(' ') },
+    '__CERTBOT_DOMAINS__' => -> { sort_domains(config).map { |d| "-d #{d}" }.join(' ') },
     '__CERTBOT_EMAIL__' => -> { config[:certbot_email] },
     '__CERTBOT_MODE__' => -> { config[:certbot_mode] == 'live' ? '--force-renewal' : '--staging' },
     '__GENERATOR_DIRECTORY__' => -> { __dir__ },
@@ -57,10 +57,10 @@ def replacements(config)
     '__NGINX_DOMAINS__' => -> { config[:domains].split(/,\s*/).join(' ') },
     '__NGINX_IMAGE__' => -> { config[:nginx_image] },
     '__NGINX_SSL_CERTS__' => lambda {
-      config[:domains].split(/,\s*/).flat_map do |domain|
-        ["        ssl_certificate /etc/letsencrypt/live/#{domain}/fullchain.pem;",
-         "        ssl_certificate_key /etc/letsencrypt/live/#{domain}/privkey.pem;"]
-      end.join("\n")
+      first_domain = config[:domains].split(/,\s*/).first
+
+      ["        ssl_certificate /etc/letsencrypt/live/#{first_domain}/fullchain.pem;",
+       "        ssl_certificate_key /etc/letsencrypt/live/#{first_domain}/privkey.pem;"].join("\n")
     },
     '__PROJECT_DIRECTORY__' => -> { project_directory(config) },
     '__SERVER_DIRECTORY__' => -> { config[:server_directory] },
@@ -236,6 +236,15 @@ def print_success_message(config)
 
   puts
   puts "Please review #{instructions_path}"
+end
+
+def sort_domains(config)
+  original = config[:domains].split(/,\s*/)
+  min_dot_count = original.map { |d| d.count('.') }.min
+
+  original.partition do |domain|
+    domain.count('.') == min_dot_count
+  end.flat_map(&:sort)
 end
 
 if ARGV[0]

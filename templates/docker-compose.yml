@@ -111,7 +111,7 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - wordpress:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email __CERTBOT_EMAIL__ --agree-tos --no-eff-email __CERTBOT_MODE__ __CERTBOT_DOMAINS__
+    command: certonly -n --expand --webroot --webroot-path=/var/www/html --email __CERTBOT_EMAIL__ --agree-tos --no-eff-email __CERTBOT_MODE__ __CERTBOT_DOMAINS__
     logging:
       driver: "json-file"
       options:

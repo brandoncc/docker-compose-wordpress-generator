@@ -66,6 +66,24 @@ options:
    upload the new configuration. Then you can `docker-compose up -d` again, and
    Let's Encrypt should issue the certificate as usual.
 
+---
+
+Changing domains on an existing site can be problematic. For example:
+
+If you initially use: `example.com,a.example.com,b.example.com`
+
+and then change to: `example.com,a.example.com` (dropping `b.example.com`)
+
+The new cert will be located at `/etc/letsencrypt/live/example.com-0001/`
+
+The generator will not know this though, so it expects the cert to be located at
+`/etc/letsencrypt/live/example.com/`.
+
+The outcome is that the nginx config is written using the expected path, not the
+actual one. This means the application will continue using
+`/etc/letsencrypt/live/example.com/`, which is presumably a certificate that is
+going to expire.
+
 ## Contributions
 
 If you would like to contribute, please open a PR and provide a description of
